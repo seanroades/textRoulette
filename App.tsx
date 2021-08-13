@@ -1,21 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState }from 'react';
+import { StyleSheet, Text, Share, SafeAreaView, Button } from 'react-native';
+import Roulette from './Roulette'
+import styles from './styles'
+import * as Contacts from 'expo-contacts';
 
 export default function App() {
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaView style={styles.bg}>
+      <Text style={styles.largeHeaderText}>TEXT ROULETTE</Text>
+      <Roulette />
+      <StatusBar style="light" />
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

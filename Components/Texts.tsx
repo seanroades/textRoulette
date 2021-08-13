@@ -7,7 +7,7 @@ interface TextDetails {
   /** 
    * Specifies message to display in text
    */
-  fromTextRoulette: Boolean
+  fromTextRoulette: Boolean 
   /**
    * true if the text is from text roulette team, false if the text is meant to be sent from the user
    */

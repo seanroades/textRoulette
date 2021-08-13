@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Share, SafeAreaView, Button, Text } from 'react-native';
+import { Share, View, Button, Text } from 'react-native';
 import * as Contacts from 'expo-contacts';
-import './styles'
+import styles from './Styles'
 
 const Roulette = () => {
   const [contacts, setContacts] = useState<Contacts.Contact[] | []>([]);
@@ -5650,11 +5650,11 @@ const Roulette = () => {
     }
   };
   return (
-    <SafeAreaView>
+    <View>
       <Text>Person to text: {randomPerson}</Text>
       <Text>Their number: {number}</Text>
       <Button onPress={shareText} title="PULL THE TRIGGER" />
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -12,7 +12,6 @@ export default StyleSheet.create({
     fontSize: themeStyles.FONT_SIZE_MEDIUM,
     color: themeStyles.BG_LIGHT_COLOR,
     fontWeight: themeStyles.FONT_WEIGHT_MEDIUM,
-    textAlign: 'left',
   },
   smallHeaderText: {
     fontSize: themeStyles.FONT_SIZE_SMALL,
@@ -28,7 +27,7 @@ export default StyleSheet.create({
     maxWidth: '70%',
     width: 'auto',
     borderRadius: themeStyles.TEXT_BORDER_RADIUS,
-    marginTop: '4%',
+    marginBottom: '4%',
     marginLeft: '2%'
   },
   textBGContainerFromRoulette: {
@@ -39,10 +38,28 @@ export default StyleSheet.create({
     maxWidth: '70%',
     width: 'auto',
     borderRadius: themeStyles.TEXT_BORDER_RADIUS,
-    marginTop: '4%',
-    marginRight: '2%'
+    marginBottom: '4%',
+    marginRight: '2%', 
   },
+
+  textBGFromTextUserResponse: {
+    backgroundColor: themeStyles.ACCENT_COLOR,
+    maxWidth: '100%',
+    width: 'auto',
+    borderRadius: themeStyles.TEXT_BORDER_RADIUS,
+    height: '70%'
+  },
+
   textBGContainerFromUser: {
     alignItems: 'flex-end'
+  },
+  mockKeyboard: {
+    backgroundColor: 'rgba(40, 40, 40, 0.95)',
+     height: '20%',
+     position: 'absolute',
+     left: 0,
+     right: 0,
+     bottom: 0,
+     borderTopRightRadius: themeStyles.TEXT_BORDER_RADIUS
   }
 });

@@ -11,7 +11,8 @@ import {
     Text, 
     SafeAreaView, 
     View,
-    Button
+    Button,
+    Alert
   } from 'react-native';
 import Roulette from './Components/Roulette'
 import styles from './Styles'
@@ -263,7 +264,15 @@ export default function App() {
       )
       console.log("status", status)
     } else {
-      console.log("SMS is not available")
+      Alert.alert(
+        "SMS not enabled",
+        "You must have SMS enabled on your phone to play",
+        [
+          {
+            text: "OK, I'll turn it on"
+          }
+        ]
+      )
     }
   }
 

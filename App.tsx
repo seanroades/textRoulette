@@ -19,6 +19,7 @@ import styles from './Styles'
 import * as Contacts from 'expo-contacts';
 import TextMessage from './Components/Texts'
 import TextResponse from './Components/ResponseText'
+import { randomTexts } from './RandomTexts'
 
 export default function App() {
   //#region onboarding questions
@@ -255,14 +256,25 @@ export default function App() {
         }
       }
     }
-
+    var tempText = randomTexts[Math.floor(Math.random() * randomTexts.length)]
+    if (tempText !== "") {
+      setText(tempText)
+    }
+    else {
+      while (tempText !== "") {
+        tempText = randomTexts[Math.floor(Math.random() * randomTexts.length)]
+        setText(tempText)
+      }
+    }
+    
     const isAvailable = await SMS.isAvailableAsync();
     if (isAvailable) {
       const status = await SMS.sendSMSAsync(
         number,
-        'Random text will go here--one click send test. SUCCESS receipt'
+        text
       )
       console.log("status", status)
+      // 
     } else {
       Alert.alert(
         "SMS not enabled",

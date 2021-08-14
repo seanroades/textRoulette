@@ -2,16 +2,6 @@ import styles from '../Styles'
 import { View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-interface OnboardingAnswer {
-  type: String;
-
-  questionId: number;
-
-  message: String;
-
-  nextQuestionId: number | null;
-}
-
 interface TextResponse {
   message: String;
   /** 

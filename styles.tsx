@@ -61,5 +61,18 @@ export default StyleSheet.create({
      right: 0,
      bottom: 0,
      borderTopRightRadius: themeStyles.TEXT_BORDER_RADIUS
+  },
+  pointsAbsContainer: {
+    position: 'absolute',
+    top: 20,
+    left: 30
+  },
+  pointsRelContainer: {
+    backgroundColor: themeStyles.ACCENT_COLOR,
+    height: '100%',
+    width: '200%',
+    position: 'relative',
+    borderRadius: themeStyles.TEXT_BORDER_RADIUS
   }
+  
 });

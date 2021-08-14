@@ -13,7 +13,8 @@ import {
     SafeAreaView, 
     View,
     Button,
-    Alert
+    Alert,
+    Image
   } from 'react-native';
 import Roulette from './Components/Roulette'
 import styles from './Styles'
@@ -65,6 +66,7 @@ export default function App() {
   const [name, setName] = useState("")
   const [number, setNumber] = useState("")
   const [text, setText] = useState("")
+  const [points, setPoints] = useState(0)
 
   useEffect(() => {
     (async () => {
@@ -75,6 +77,7 @@ export default function App() {
         });
         if (data.length > 0) {
           setContacts(data)
+          console.log("data up")
         }
       }
     })();
@@ -100,13 +103,14 @@ export default function App() {
         setName(localName);
         namePresent = true;
       }
-      if (currentContact != undefined && namePresent === true) {
+      if (currentContact !== undefined && namePresent === true) {
         if (currentContact.phoneNumbers && currentContact.phoneNumbers.length > 0 && currentContact.phoneNumbers[0].digits) {
           localNumber = currentContact.phoneNumbers[0].digits
           setNumber(localNumber)
           numberPresent = true;
         }
       }
+      console.log("in test name:", name, "in test number", number, contacts.length)
     }
     var tempText = randomTexts[Math.floor(Math.random() * randomTexts.length)];
     if (tempText !== "") {
@@ -123,7 +127,6 @@ export default function App() {
     
     const isAvailable = await SMS.isAvailableAsync();
     if (isAvailable) {
-
       const status = await SMS.sendSMSAsync(
         localNumber,
         localText
@@ -131,13 +134,16 @@ export default function App() {
 
        // put new response into history
       if (status.result == "sent") {
-
+        const newPoints = points + 1
+        setPoints(newPoints)
         //register name + message sent into history
         const msg = "You just sent \"" + localText + "\" to " + localName + "!";
         setHistory((old) => [...old, { message: msg, fromTextRoulette: true }]);
         const randIdx = Math.floor(Math.random() * successResponses.length);
         setHistory((old) => [...old, { message: successResponses[randIdx], fromTextRoulette: true }]);
       } else {
+        const newPoints = points - 1
+        setPoints(newPoints)
         const randIdx = Math.floor(Math.random() * failResponses.length);
         setHistory((old) => [...old, { message: failResponses[randIdx], fromTextRoulette: true }]);
       }
@@ -165,8 +171,19 @@ export default function App() {
   return (
     <SafeAreaView style={styles.bg}>
       <StatusBar style="light" />
-      
       <View style={{paddingTop: '3%', marginBottom: '4%'}}>
+        <View style={styles.pointsAbsContainer}>
+          <View style={styles.pointsRelContainer}>
+            <Text style={[styles.mediumHeaderText, { position: 'relative', textAlign: 'center'}]}>
+              {points}
+            </Text>
+          </View>
+        </View>
+        <Image 
+          source={require('./assets/notifArrow.png')} 
+          style={{position: 'absolute', width: 17.14, height: 30, top: 16, left: 13}}
+        />
+        
         <Text style={styles.largeHeaderText}>Text Roulette</Text>
         <Text style={styles.smallHeaderText}>Drunken texts made better</Text>
       </View>
@@ -175,7 +192,7 @@ export default function App() {
         {history.map((text, i) => {
           return <TextMessage message={text.message} fromTextRoulette={text.fromTextRoulette} />
         })}
-        <View style={{height: 200, backgroundColor: '#121212'}}></View>
+        <View style={{height: 150, backgroundColor: '#121212'}}></View>
       </ScrollView>
       <View style={styles.mockKeyboard}>
         <View style={{flexDirection: "row", justifyContent: 'space-around', paddingTop: '5%'}}>

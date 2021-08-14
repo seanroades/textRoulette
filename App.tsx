@@ -1,4 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
+import * as SMS from 'expo-sms';
 import React, 
   { 
     useEffect, 
@@ -151,11 +152,41 @@ export default function App() {
 
   //#endregion
   
-  //#region Sucessful and not successful questions, blank atm
+  //#region Sucessful and not successful responses from text roulette team
   // Successful
+  // All start with the text you sent and then finish with a new string from this
+  // "You sent ["I don't want to have your baby chincilla"] (just the text they just sent) to [sean roades] (the name of the person they just sent it to)? "
+
+  const successResponses = [
+    "Damnnnnn, you're crazier than my old english teacher. Let's see if you can keep it up.",
+    "Anything for family though right? Alright next one?",
+    "Yoooooo chill chill, you're crazy. We don't even know if we're ready for your next text.",
+    "Eh, I'll give it to you--but that one wasn't THAT BAD. I mean we'd probably sent it too. Ready for a harder one??",
+    "**Proceeds to slow clap** Want a cookie? Look if we're being honest, we don't even like sweet stuff, so let's move onto something a bit more sour.",
+    "Ah yes, the same text I sent to my kindergarden teacher a few years back. Good times. Next one?",
+    "Ready for ANOTHER ONE? (DJ KHALED! WE THE BEST MUSIC...continued)",
+    "lol no way I just sent that to my ex, hope she sees it 🙏 again though??",
+    "Uh oh! Stinkyy! Let's get some febreeze up in here and send another one.",
+    "😳 🥵 🥶 sheeeeeeeeeeeeeeeeeeeeeeeeeeeeeesh!!! What about another one?",
+    "👁👅👁 yes. Next?",
+    "👁👄👁..............Down for another?",
+    "🤌🏻 such a spicy pizza, let's whip another one up",
+    "😮😮😮😮, time to take this to another level 😼"
+  ]
+
 
   // Not successful
-
+  const failRespones = [
+    "I bet if you went to McDonald's and you ordered a 6 piece chicken nugget and you only got 5, you'd be too afraid to ask for the extra one. Anyways let's go to the next one, MAYBE you'll get that one.",
+    "I bet you sleep with a nightlight. Time to redeem yourself.",
+    "me to u rn: 😀🤛 Imma give you another try though",
+    "I feel like this me 🤰 THE WAY YOU'RE FUCKING ME! GET THAT SCORE UPPPPPP!",
+    "🗣 your friends definitely talk shit about you. Next one dude, c'mon.",
+    "🏋🏼‍♂️ <- your friends trying to pick up your lame ass, next one!",
+    "🤪 so quirky not sending that, bet you like pineapple on your pizza, but we're not judging you....well actually we are but here's another chance.",
+    "😞 when you hit that button it feels so good though, please?",
+    "👿 CMON, YOU SHOULD'VE SENT ITTTT. Next one though at least right??"
+  ]
   //#endregion
 
   //#region  history functions
@@ -182,6 +213,35 @@ export default function App() {
 
   //#endregion 
 
+  //#region roulette function, answer array for random "let's go" type sayings to show the text
+  const playRoulette = async () => {
+    const isAvailable = await SMS.isAvailableAsync();
+    if (isAvailable) {
+      const status = await SMS.sendSMSAsync(
+        '16179453422',
+        'Random text will go here--one click send test. SUCCESS receipt'
+      )
+      console.log("status", status)
+    } else {
+      console.log("SMS is not available")
+    }
+  }
+
+  // sayings
+  const sayings = [
+    "Let's see the text",
+    "Fuck it, let's go",
+    "Let's see it",
+    "Show me it",
+    "I got nothing to lose",
+    "Show the text",
+    "Just show it already",
+    "I'm ready to go",
+    "? let's go already"
+  ]
+  // sayings[Math.floor(Math.random() * sayings.length)] picks a random one, but ignore for now
+  //#endregion
+
   return (
     <SafeAreaView style={styles.bg}>
       <StatusBar style="light" />
@@ -191,9 +251,11 @@ export default function App() {
         <Text style={styles.smallHeaderText}>Drunken texts made better</Text>
       </View>
       <ScrollView>
-      {history.map((text, i) => {
-        return <TextMessage message={text.message} fromTextRoulette={text.fromTextRoulette} />
-      })}
+        {history.map((text, i) => {
+          return <TextMessage message={text.message} fromTextRoulette={text.fromTextRoulette} />
+        })}
+        <TextResponse message={} onPress={() => console.log("hi there")}/>
+
         <View style={{height: 200, backgroundColor: '#121212'}}></View>
       </ScrollView>
       <View style={styles.mockKeyboard}>
@@ -203,7 +265,6 @@ export default function App() {
           })}
         </View>
       </View>
-      <Roulette />
     </SafeAreaView>
   );
 }

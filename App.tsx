@@ -34,7 +34,7 @@ export default function App() {
   interface OnboardingAnswer {
     type: String;
 
-    questionId: number;
+    questionId: number | null;
 
     message: String;
 
@@ -74,16 +74,9 @@ export default function App() {
       5, {
         type: 'question',
         id: 5,
-        message: "Fantastic. Let's get into it."
+        message: "Fantastic. Let's get into it.",
       }
     ],
-    [
-      6, {
-        type: 'question',
-        id: 6,
-        message: "Alright loser, so I'm gonna queue up a text for your drunkass to send or else you're going to have it drink, take a look."
-      }
-    ]
   ]);
 
   const onboardingAs : Map<number, Array<OnboardingAnswer>> = new Map([
@@ -135,7 +128,7 @@ export default function App() {
           type: 'answer',
           questionId: 4,
           message: "Let's go.",
-          nextQuestionId: 5,
+          nextQuestionId: null,
         }
       ]
     ],
@@ -144,11 +137,11 @@ export default function App() {
         {
           type: 'answer',
           questionId: 5,
-          message: "Let's see the text.",
+          message: "Let's go.",
           nextQuestionId: null,
         }
       ]
-    ]
+    ],
   ]);
 
   //#endregion
@@ -188,6 +181,19 @@ export default function App() {
     "😞 when you hit that button it feels so good though, please?",
     "👿 CMON, YOU SHOULD'VE SENT ITTTT. Next one though at least right??"
   ]
+
+  // sayings
+  const sayings = [
+    "Let's see the text",
+    "Fuck it, let's go",
+    "Let's see it",
+    "Show me it",
+    "I got nothing to lose",
+    "Show the text",
+    "Just show it already",
+    "I'm ready to go",
+    "? let's go already"
+  ]
   //#endregion
 
   //#region  history functions
@@ -195,7 +201,8 @@ export default function App() {
   const firstText = ({ message: onboardingQs.get(1)?.message, fromTextRoulette: true })
   const [history, setHistory] = useState<Array<any>>([firstText]);
   const [currentQuestionId, setCurrentQuestion] = useState<Number>(1);
-  const [currentAnswers, setCurrentAnswers] = useState<Array<any>>([...onboardingAs.get(1) ?? []])
+  const [currentAnswers, setCurrentAnswers] = useState<Array<any>>([...onboardingAs.get(1) ?? []]);
+  const [roulette, setRoulette] = useState<boolean>(false);
 
   const onAnswerPress = (answer: OnboardingAnswer) => {
     const nextQuestionId = answer.nextQuestionId;
@@ -207,8 +214,13 @@ export default function App() {
       setHistory((old) => [...old, { message: nextQ?.message, fromTextRoulette: true }]);
       setCurrentAnswers(nextAnswers);
     } else {
-      setCurrentAnswers([]);
       //proceed to game
+      setRoulette(true);
+      //pick random saying
+      const randIdx = Math.floor(Math.random() * sayings.length);
+      const newAns = { type: 'answer', message: sayings[randIdx], questionId: null, nextQuestionId: null };
+      playRoulette(newAns);
+      setCurrentAnswers([newAns]);
     }
   }
 
@@ -236,7 +248,11 @@ export default function App() {
     })();
   }, []);
 
-  const playRoulette = async () => {
+  const playRoulette = async (answer: OnboardingAnswer) => {
+
+    // put answer into history
+    setHistory((old) => [...old, { message: answer.message, fromTextRoulette: false }]);
+
     // Find contact with non empty name and number
     var namePresent = false
     var numberPresent = false
@@ -274,20 +290,22 @@ export default function App() {
         ]
       )
     }
+
+    // put new response into history
+    if (status) {
+      const randIdx = Math.floor(Math.random() * successResponses.length);
+      setHistory((old) => [...old, { message: successResponses[randIdx], fromTextRoulette: true }]);
+    } else {
+      const randIdx = Math.floor(Math.random() * successResponses.length);
+      setHistory((old) => [...old, { message: successResponses[randIdx], fromTextRoulette: true }]);
+    }
+
+    // put new ans
+    const randIdx = Math.floor(Math.random() * sayings.length);
+    const newAns = { type: 'answer', message: sayings[randIdx], questionId: null, nextQuestionId: null }
+    setCurrentAnswers([newAns]);
   }
 
-  // sayings
-  const sayings = [
-    "Let's see the text",
-    "Fuck it, let's go",
-    "Let's see it",
-    "Show me it",
-    "I got nothing to lose",
-    "Show the text",
-    "Just show it already",
-    "I'm ready to go",
-    "? let's go already"
-  ]
   // sayings[Math.floor(Math.random() * sayings.length)] picks a random one, but ignore for now
   //#endregion
 
@@ -303,14 +321,14 @@ export default function App() {
         {history.map((text, i) => {
           return <TextMessage message={text.message} fromTextRoulette={text.fromTextRoulette} />
         })}
-        <TextResponse message={"Send it"} onPress={() => playRoulette()}/>
+        {/* <TextResponse message={"Send it"} onPress={() => playRoulette()}/> */}
 
         <View style={{height: 200, backgroundColor: '#121212'}}></View>
       </ScrollView>
       <View style={styles.mockKeyboard}>
         <View style={{flexDirection: "row", justifyContent: 'space-around', paddingTop: '5%'}}>
           {currentAnswers.map((answer, i) => {
-            return <TextResponse message={answer.message} onPress={() => onAnswerPress(answer)}/>
+            return <TextResponse message={answer.message} onPress={roulette ? () => playRoulette(answer) : () => onAnswerPress(answer)}/>
           })}
         </View>
       </View>

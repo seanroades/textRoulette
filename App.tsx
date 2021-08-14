@@ -77,7 +77,6 @@ export default function App() {
         });
         if (data.length > 0) {
           setContacts(data)
-          console.log("data up")
         }
       }
     })();

@@ -12,7 +12,8 @@ import {
     SafeAreaView, 
     View,
     Button,
-    Alert
+    Alert,
+    Image
   } from 'react-native';
 import Roulette from './Components/Roulette'
 import styles from './Styles'

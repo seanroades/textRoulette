@@ -214,11 +214,51 @@ export default function App() {
   //#endregion 
 
   //#region roulette function, answer array for random "let's go" type sayings to show the text
+  // states
+  const [contacts, setContacts] = useState<Contacts.Contact[] | []>([]);
+  const [name, setName] = useState("")
+  const [number, setNumber] = useState("")
+  const [text, setText] = useState("")
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Contacts.requestPermissionsAsync();
+      if (status === 'granted') {
+        const { data } = await Contacts.getContactsAsync({
+          fields: [Contacts.Fields.FirstName, Contacts.Fields.PhoneNumbers],
+        });
+        if (data.length > 0) {
+          setContacts(data)
+          // const contact = data[Math.floor(Math.random() * data.length)];
+        }
+      }
+    })();
+  }, []);
+
   const playRoulette = async () => {
+    // Find contact with non empty name and number
+    var namePresent = false
+    var numberPresent = false
+    while ((namePresent === false) && (numberPresent === false)) {
+      namePresent = false
+      numberPresent = false
+      var currentContact = contacts[Math.floor(Math.random() * contacts.length)]
+      if (currentContact.name != undefined && currentContact.name != null && currentContact.name != "" && currentContact.name.length > 0) {
+        setName(currentContact.name)
+        namePresent = true
+      }
+      if (currentContact != undefined && namePresent === true) {
+        if (currentContact.phoneNumbers && currentContact.phoneNumbers.length > 0 && currentContact.phoneNumbers[0].digits) {
+          setNumber(currentContact.phoneNumbers[0].digits)
+          numberPresent = true
+        }
+      }
+    }
+
     const isAvailable = await SMS.isAvailableAsync();
     if (isAvailable) {
       const status = await SMS.sendSMSAsync(
-        '16179453422',
+        number,
         'Random text will go here--one click send test. SUCCESS receipt'
       )
       console.log("status", status)
@@ -254,7 +294,7 @@ export default function App() {
         {history.map((text, i) => {
           return <TextMessage message={text.message} fromTextRoulette={text.fromTextRoulette} />
         })}
-        <TextResponse message={} onPress={() => console.log("hi there")}/>
+        <TextResponse message={"Send it"} onPress={() => playRoulette()}/>
 
         <View style={{height: 200, backgroundColor: '#121212'}}></View>
       </ScrollView>

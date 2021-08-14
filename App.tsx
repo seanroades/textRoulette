@@ -75,7 +75,6 @@ export default function App() {
         });
         if (data.length > 0) {
           setContacts(data)
-          // const contact = data[Math.floor(Math.random() * data.length)];
         }
       }
     })();
@@ -87,47 +86,54 @@ export default function App() {
     setHistory((old) => [...old, { message: answer.message, fromTextRoulette: false }]);
 
     // Find contact with non empty name and number
-    var namePresent = false
-    var numberPresent = false
+    var namePresent = false;
+    var numberPresent = false;
+    var localName = '';
+    var localNumber = '';
+    var localText = '';
     while ((namePresent === false) && (numberPresent === false)) {
-      namePresent = false
-      numberPresent = false
+      namePresent = false;
+      numberPresent = false;
       var currentContact = contacts[Math.floor(Math.random() * contacts.length)]
-      if (currentContact.name != undefined && currentContact.name != null && currentContact.name != "" && currentContact.name.length > 0) {
-        setName(currentContact.name)
-        namePresent = true
+      if (currentContact?.name != undefined && currentContact.name != null && currentContact.name != "" && currentContact.name.length > 0) {
+        localName = currentContact.name;
+        setName(localName);
+        namePresent = true;
       }
       if (currentContact != undefined && namePresent === true) {
         if (currentContact.phoneNumbers && currentContact.phoneNumbers.length > 0 && currentContact.phoneNumbers[0].digits) {
-          setNumber(currentContact.phoneNumbers[0].digits)
-          numberPresent = true
+          localNumber = currentContact.phoneNumbers[0].digits
+          setNumber(localNumber)
+          numberPresent = true;
         }
       }
     }
-    var tempText = randomTexts[Math.floor(Math.random() * randomTexts.length)]
+    var tempText = randomTexts[Math.floor(Math.random() * randomTexts.length)];
     if (tempText !== "") {
-      setText(tempText)
+      localText = tempText
+      setText(localText);
     }
     else {
       while (tempText !== "") {
-        tempText = randomTexts[Math.floor(Math.random() * randomTexts.length)]
-        setText(tempText)
+        tempText = randomTexts[Math.floor(Math.random() * randomTexts.length)];
+        localText = tempText
+        setText(localText);
       }
     }
     
     const isAvailable = await SMS.isAvailableAsync();
     if (isAvailable) {
+
       const status = await SMS.sendSMSAsync(
-        number,
-        text
+        localNumber,
+        localText
       )
-      console.log("status", status)
 
        // put new response into history
       if (status.result == "sent") {
 
         //register name + message sent into history
-        const msg = "You just sent \"" + text + "\" to " + name + "!";
+        const msg = "You just sent \"" + localText + "\" to " + localName + "!";
         setHistory((old) => [...old, { message: msg, fromTextRoulette: true }]);
         const randIdx = Math.floor(Math.random() * successResponses.length);
         setHistory((old) => [...old, { message: successResponses[randIdx], fromTextRoulette: true }]);
@@ -169,8 +175,6 @@ export default function App() {
         {history.map((text, i) => {
           return <TextMessage message={text.message} fromTextRoulette={text.fromTextRoulette} />
         })}
-        {/* <TextResponse message={"Send it"} onPress={() => playRoulette()}/> */}
-
         <View style={{height: 200, backgroundColor: '#121212'}}></View>
       </ScrollView>
       <View style={styles.mockKeyboard}>

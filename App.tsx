@@ -171,7 +171,7 @@ export default function App() {
 
 
   // Not successful
-  const failRespones = [
+  const failResponses = [
     "I bet if you went to McDonald's and you ordered a 6 piece chicken nugget and you only got 5, you'd be too afraid to ask for the extra one. Anyways let's go to the next one, MAYBE you'll get that one.",
     "I bet you sleep with a nightlight. Time to redeem yourself.",
     "me to u rn: 😀🤛 Imma give you another try though",
@@ -290,7 +290,19 @@ export default function App() {
         text
       )
       console.log("status", status)
-      // 
+
+       // put new response into history
+      if (status.result == "sent") {
+
+        //register name + message sent into history
+        const msg = "You just sent \"" + text + "\" to " + name + "!";
+        setHistory((old) => [...old, { message: msg, fromTextRoulette: true }]);
+        const randIdx = Math.floor(Math.random() * successResponses.length);
+        setHistory((old) => [...old, { message: successResponses[randIdx], fromTextRoulette: true }]);
+      } else {
+        const randIdx = Math.floor(Math.random() * failResponses.length);
+        setHistory((old) => [...old, { message: failResponses[randIdx], fromTextRoulette: true }]);
+      }
     } else {
       Alert.alert(
         "SMS not enabled",
@@ -301,15 +313,6 @@ export default function App() {
           }
         ]
       )
-    }
-
-    // put new response into history
-    if (status) {
-      const randIdx = Math.floor(Math.random() * successResponses.length);
-      setHistory((old) => [...old, { message: successResponses[randIdx], fromTextRoulette: true }]);
-    } else {
-      const randIdx = Math.floor(Math.random() * successResponses.length);
-      setHistory((old) => [...old, { message: successResponses[randIdx], fromTextRoulette: true }]);
     }
 
     // put new ans

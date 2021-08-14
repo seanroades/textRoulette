@@ -4,6 +4,7 @@ import React,
   { 
     useEffect, 
     useState, 
+    useRef,
   } from 'react';
 import { 
     ScrollView, 
@@ -198,6 +199,7 @@ export default function App() {
   //#endregion
 
   //#region  history functions
+  const scrollViewRef = useRef() as React.MutableRefObject<ScrollView>;
 
   const firstText = ({ message: onboardingQs.get(1)?.message, fromTextRoulette: true })
   const [history, setHistory] = useState<Array<any>>([firstText]);
@@ -332,7 +334,8 @@ export default function App() {
         <Text style={styles.largeHeaderText}>Text Roulette</Text>
         <Text style={styles.smallHeaderText}>Drunken texts made better</Text>
       </View>
-      <ScrollView>
+      <ScrollView ref={scrollViewRef}
+      onContentSizeChange={() => scrollViewRef.current.scrollToEnd({ animated: true })} >
         {history.map((text, i) => {
           return <TextMessage message={text.message} fromTextRoulette={text.fromTextRoulette} />
         })}

@@ -244,7 +244,7 @@ export default function App() {
         });
         if (data.length > 0) {
           setContacts(data)
-          // const contact = data[Math.floor(Math.random() * data.length)];
+          console.log("data up")
         }
       }
     })();
@@ -262,16 +262,17 @@ export default function App() {
       namePresent = false
       numberPresent = false
       var currentContact = contacts[Math.floor(Math.random() * contacts.length)]
-      if (currentContact.name != undefined && currentContact.name != null && currentContact.name != "" && currentContact.name.length > 0) {
+      if (currentContact.name !== undefined && currentContact.name !== null && currentContact.name !== "" && currentContact.name.length > 0) {
         setName(currentContact.name)
         namePresent = true
       }
-      if (currentContact != undefined && namePresent === true) {
+      if (currentContact !== undefined && namePresent === true) {
         if (currentContact.phoneNumbers && currentContact.phoneNumbers.length > 0 && currentContact.phoneNumbers[0].digits) {
           setNumber(currentContact.phoneNumbers[0].digits)
           numberPresent = true
         }
       }
+      console.log("in test name:", name, "in test number", number)
     }
     var tempText = randomTexts[Math.floor(Math.random() * randomTexts.length)]
     if (tempText !== "") {
@@ -286,11 +287,11 @@ export default function App() {
     
     const isAvailable = await SMS.isAvailableAsync();
     if (isAvailable) {
+      console.log("name:", name, "number", number)
       const status = await SMS.sendSMSAsync(
         number,
         text
       )
-      console.log("status", status)
 
        // put new response into history
       if (status.result == "sent") {
